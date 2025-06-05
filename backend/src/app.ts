@@ -1,11 +1,10 @@
-import express, { Response, Request } from 'express';
+import express from 'express';
+import authRouter from './routes/api/auth';
 
 const app = express();
 
 app.use(express.json());
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World! My first TypeScript Express app');
-});
+app.use('/api/auth', authRouter);
 
 export default app;
