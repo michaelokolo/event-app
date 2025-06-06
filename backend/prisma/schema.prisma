@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  password     String
+  firstName    String
+  lastName     String
+  role         Role
+  company      String? // Optional field for Organizers
+  skills       String[] // Freelancers only
+  bio          String? // Optional field for Freelancers
+  portfolio    String? // Optional field for Freelancers
+  events       Event[]       @relation("OrganizerEvents")
+  applications Application[]
+}
+
+model Event {
+  id           String        @id @default(uuid())
+  title        String
+  date         DateTime
+  location     String
+  services     String[]
+  budget       Float
+  organizer    User          @relation("OrganizerEvents", fields: [organizerId], references: [id])
+  organizerId  String
+  applications Application[]
+}
+
+model Application {
+  id           String            @id @default(uuid())
+  event        Event             @relation(fields: [eventId], references: [id])
+  eventId      String
+  freelancer   User              @relation(fields: [freelancerId], references: [id])
+  freelancerId String
+  status       ApplicationStatus
+  message      String
+  rateQuote    Float
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+}
+
+enum Role {
+  ORGANIZER
+  FREELANCER
+  ADMIN
+}
+
+enum ApplicationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}

@@ -14,6 +14,7 @@ export default function signup(
   next: NextFunction
 ) {
   // Extract user information from the request body
-  const { firstName, lastName, email, password } = req.body;
+  const { firstName, lastName, email, password, role } = req.body;
+
   res.status(201).send('I am working');
 }
