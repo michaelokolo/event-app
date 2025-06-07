@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { hashPassword } from '../../utils/hashPassword';
+import createUserPrisma from '../../utils/db/createUserPrisma';
 
 /**
  * Signup controller that registers the user with information given in the body of the request.
@@ -14,14 +14,15 @@ export default async function signup(
   res: Response,
   next: NextFunction
 ) {
-  // Extract user information from the request body
-  const { firstName, lastName, email, password, role } = req.body.user;
-
   try {
-    const hashedPassword = await hashPassword(password);
+    const userData = req.body.user;
+    const newUser = await createUserPrisma(userData);
 
-    res.status(201).send(hashedPassword);
+
+    //Generate a JWT token for the new user
+    
+    res.status(201).json(newUser);
   } catch (error) {
-    res.status(400).json({ error });
+    next(error);
   }
 }
