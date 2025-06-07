@@ -9,31 +9,29 @@
 
 export function validatePassword(password: string): string[] {
   const errors: string[] = [];
-
   if (!password) {
-    errors.push('password must be provided');
-    return errors;
+    errors.push('Password must be provided');
   }
   if (password.length < 8) {
-    errors.push('password must be at least 8 characters long');
+    errors.push('Password must be at least 8 characters long');
   }
   if (password.length > 64) {
-    errors.push('password must be at most 64 characters long');
+    errors.push('Password must be at most 64 characters long');
   }
   if (!/[A-Z]/.test(password)) {
-    errors.push('password must contain at least one uppercase letter');
+    errors.push('Password must contain at least one uppercase letter');
   }
   if (!/[a-z]/.test(password)) {
-    errors.push('password must contain at least one lowercase letter');
+    errors.push('Password must contain at least one lowercase letter');
   }
   if (!/[0-9]/.test(password)) {
-    errors.push('password must contain at least one number');
+    errors.push('Password must contain at least one number');
   }
   if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-    errors.push('password must contain at least one special character');
+    errors.push('Password must contain at least one special character');
   }
   if (password.includes(' ')) {
-    errors.push('password must not contain spaces');
+    errors.push('Password must not contain spaces');
   }
   return errors;
 }

@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { isAllowedSignupRole } from '../../utils/validateUserRole';
-import { ValidationError } from '../../utils/types';
 import { validatePassword } from '../../utils/validatePassword';
 import { validateEmail } from '../../utils/validateEmail';
+import { validateSignupRole } from '../../utils/validateSignupRole';
+import { ValidationError } from '../../utils/errors/ValidationError';
 
 // if (!isAllowedSignupRole(role)) {
 // }
@@ -22,63 +22,36 @@ export default function userSignupValidator(
   res: Response,
   next: NextFunction
 ) {
-  const errors: ValidationError = {};
-  errors.body = [];
+  //console.log(req.body);
 
-  if (!req.body) {
-    errors.body.push('cannot be empty');
-    res.status(400).json({ errors });
-    return;
-  }
-
-  const { user } = req.body;
+  const errors: string[] = [];
+  const { user } = req.body || {};
 
   if (!user) {
-    errors.body.push('user object must be provided');
-    res.status(400).json({ errors });
+    errors.push('User object must be provided.');
+  } else {
+    const { email, password, firstName, lastName, role } = user;
+
+    errors.push(...validateSignupRole(role));
+    errors.push(...validatePassword(password));
+    errors.push(...validateEmail(email));
+
+    if (!firstName) {
+      errors.push('First name must be provided');
+    } else if (firstName && typeof firstName !== 'string') {
+      errors.push('First name must be a string');
+    }
+
+    if (!lastName) {
+      errors.push('Last name must be provided');
+    } else if (lastName && typeof lastName !== 'string') {
+      errors.push('Last name must be a string');
+    }
+  }
+
+  if (errors.length) {
+    next(new ValidationError('Validation Error', errors));
     return;
   }
-
-  const { email, password, firstName, lastName, role } = user;
-
-  if (!role) {
-    errors.body.push('role must be provided');
-    res.status(400).json({ errors });
-    return;
-  }
-
-  if (!isAllowedSignupRole(role)) {
-    errors.body.push('role is not allowed for signup');
-    res.status(400).json({ errors });
-    return;
-  }
-
-  const passwordErrors = validatePassword(password);
-  if (passwordErrors.length > 0) {
-    errors.body.push(...passwordErrors);
-  }
-
-  const emailErrors = validateEmail(email);
-  if (emailErrors.length > 0) {
-    errors.body.push(...emailErrors);
-  }
-
-  if (!firstName) {
-    errors.body.push('firstName must be provided');
-  } else if (firstName && typeof firstName !== 'string') {
-    errors.body.push('firstName must be a string');
-  }
-
-  if (!lastName) {
-    errors.body.push('lastName must be provided');
-  } else if (lastName && typeof lastName !== 'string') {
-    errors.body.push('firstName must be a string');
-  }
-
-  if (errors.body.length) {
-    res.status(400).json({ errors });
-    return;
-  }
-
   next();
 }

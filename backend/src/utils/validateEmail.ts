@@ -9,19 +9,17 @@
 
 export function validateEmail(email: string): string[] {
   const errors: string[] = [];
-
   if (!email) {
-    errors.push('email must be provided');
-    return errors;
+    errors.push('Email must be provided.');
   }
   if (typeof email !== 'string') {
-    errors.push('email must be a string');
+    errors.push('Email must be a string.');
   }
   if (!email.includes('@')) {
-    errors.push('email must be a valid email address');
+    errors.push('Email must be a valid email address.');
   }
   if (email.includes(' ')) {
-    errors.push('email must not contain spaces');
+    errors.push('Email must not contain spaces.');
   }
   return errors;
 }
