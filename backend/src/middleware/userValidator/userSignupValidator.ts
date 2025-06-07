@@ -4,9 +4,6 @@ import { validateEmail } from '../../utils/validateEmail';
 import { validateSignupRole } from '../../utils/validateSignupRole';
 import { ValidationError } from '../../utils/errors/ValidationError';
 
-// if (!isAllowedSignupRole(role)) {
-// }
-
 /**
  * This function is a middleware that validates the user information in the request body in order to log the user in.
  * If the request is malformed it responds accordingly and returns, stopping the request from going further.
