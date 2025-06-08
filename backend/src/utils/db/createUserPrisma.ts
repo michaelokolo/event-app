@@ -1,6 +1,6 @@
 import prisma from './prisma';
 import { Role } from '../../../generated/prisma';
-import { hashPassword } from '../../utils/hashPassword';
+import { hashPassword } from '../auth/hashPassword';
 import { ConflictError } from '../errors/ConflictError';
 
 /**
