@@ -33,6 +33,7 @@ export default async function signup(
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
+    // Remember to setup a viewer
     res.status(201).json({
       user: newUser,
       accessToken,
