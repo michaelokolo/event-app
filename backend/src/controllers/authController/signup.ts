@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import createUserPrisma from '../../utils/db/createUserPrisma';
 import { generateAccessToken } from '../../utils/auth/generateAccessToken';
+import { generateRefreshToken } from '../../utils/auth/generateRefreshToken';
+import { storeRefreshToken } from '../../utils/auth/storeRefreshToken';
 
 /**
  * Signup controller that registers the user with information given in the body of the request.
@@ -20,10 +22,21 @@ export default async function signup(
     const newUser = await createUserPrisma(userData);
 
     const accessToken = generateAccessToken(newUser.id, newUser.role);
+    const refreshToken = generateRefreshToken(newUser.id);
 
-    //Generate a JWT token for the new user
+    await storeRefreshToken(newUser.id, refreshToken);
 
-    res.status(201).json(newUser);
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(201).json({
+      user: newUser,
+      accessToken,
+    });
   } catch (error) {
     next(error);
   }

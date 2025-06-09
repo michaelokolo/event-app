@@ -21,6 +21,7 @@ model User {
   firstName    String
   lastName     String
   role         Role
+  refreshToken String?
   company      String? // Optional field for Organizers
   skills       String[] // Freelancers only
   bio          String? // Optional field for Freelancers
