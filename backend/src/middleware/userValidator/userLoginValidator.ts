@@ -3,11 +3,20 @@ import { validateEmail } from '../../utils/validateEmail';
 import { validatePassword } from '../../utils/validatePassword';
 import { ValidationError } from '../../utils/errors/ValidationError';
 
+/**
+ * Middleware to validate user login request.
+ * @param {Request} req - The request object containing user data.
+ * @param {Response} res - The response object.
+ * @param {NextFunction} next - The next middleware function.
+ * @throws {ValidationError} If validation fails, it passes an error to the next middleware.
+ * @returns {void} Calls next middleware if validation passes.
+ */
+
 export default function userLoginValidator(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): void {
   const errors: string[] = [];
   const { user } = req.body || {};
 
