@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import prisma from '../../utils/db/prisma';
 import { generateAccessToken } from '../../utils/auth/generateAccessToken';
+import { UnauthorizedError } from '../../utils/errors/UnauthorizedError';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -14,12 +15,7 @@ export default async function refreshToken(
     const refreshToken = req.cookies.refreshToken;
 
     if (!refreshToken) {
-      res.status(401).json({
-        error: {
-          message: 'No refresh token provided',
-        },
-      });
-      return;
+      throw new UnauthorizedError('No refresh token provided');
     }
 
     let payload;
@@ -28,12 +24,7 @@ export default async function refreshToken(
         userId: string;
       };
     } catch (error) {
-      res.status(401).json({
-        error: {
-          message: 'Invalid refresh token',
-        },
-      });
-      return;
+      throw new UnauthorizedError('Invalid refresh token', error);
     }
 
     const user = await prisma.user.findUnique({
@@ -41,12 +32,7 @@ export default async function refreshToken(
     });
 
     if (!user || user.refreshToken !== refreshToken) {
-      res.status(401).json({
-        error: {
-          message: 'Refresh token not found or revoked',
-        },
-      });
-      return;
+      throw new UnauthorizedError('Refresh token not found or revoked');
     }
 
     const newAccessToken = generateAccessToken(user.id, user.role);
