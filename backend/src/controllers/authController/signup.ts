@@ -3,6 +3,7 @@ import createUserPrisma from '../../utils/db/createUserPrisma';
 import { generateAccessToken } from '../../utils/auth/generateAccessToken';
 import { generateRefreshToken } from '../../utils/auth/generateRefreshToken';
 import { storeRefreshToken } from '../../utils/auth/storeRefreshToken';
+import { InternalServerError } from '../../utils/errors/InternalServerError';
 
 /**
  * Signup controller that registers the user with information given in the body of the request.
@@ -20,6 +21,10 @@ export default async function signup(
   try {
     const userData = req.body.user;
     const newUser = await createUserPrisma(userData);
+
+    if (!newUser) {
+      throw new InternalServerError('User creation failed');
+    }
 
     const accessToken = generateAccessToken(newUser.id, newUser.role);
     const refreshToken = generateRefreshToken(newUser.id);

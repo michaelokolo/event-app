@@ -2,6 +2,7 @@ import prisma from './prisma';
 import { Role } from '../../../generated/prisma';
 import { hashPassword } from '../auth/hashPassword';
 import { ConflictError } from '../errors/ConflictError';
+import { InternalServerError } from '../../utils/errors/InternalServerError';
 
 export interface UpdateUserParams {
   firstName?: string;
@@ -67,6 +68,7 @@ export async function updateUserPrisma(
     });
     return updatedUser;
   } catch (error) {
-    throw error;
+    console.error('Error updating user:', error);
+    throw new InternalServerError('Failed to update user', error);
   }
 }
