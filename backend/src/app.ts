@@ -1,6 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/api/auth';
+import userRouter from './routes/api/user';
 import {
   generalErrorHandler,
   prismaErrorHandler,
@@ -11,6 +12,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use('/api/auth', authRouter);
+app.use('/api/user', userRouter);
 
 app.use(prismaErrorHandler);
 app.use(generalErrorHandler);
