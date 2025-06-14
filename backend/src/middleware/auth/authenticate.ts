@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import { UnauthorizedError } from '../../utils/errors/UnauthorizedError';
+import { Role } from '../../../generated/prisma';
 
 export interface AuthenticatedRequest extends Request {
-  user?: { id: string };
+  user?: { id: string; role: Role };
 }
 
 export function authenticate(
@@ -21,10 +22,11 @@ export function authenticate(
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
       userId: string;
+      role: Role;
     };
 
-    req.user = { id: decoded.userId };
-
+    req.user = { id: decoded.userId, role: decoded.role };
+    
     next();
   } catch (error) {
     throw new UnauthorizedError('Access token is invalid or expired');

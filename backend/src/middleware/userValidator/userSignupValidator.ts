@@ -19,8 +19,6 @@ export default function userSignupValidator(
   res: Response,
   next: NextFunction
 ) {
-  //console.log(req.body);
-
   const errors: string[] = [];
   const { user } = req.body || {};
 
