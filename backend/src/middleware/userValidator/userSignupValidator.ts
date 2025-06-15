@@ -3,6 +3,7 @@ import { validatePassword } from '../../utils/validatePassword';
 import { validateEmail } from '../../utils/validateEmail';
 import { validateSignupRole } from '../../utils/validateSignupRole';
 import { ValidationError } from '../../utils/errors/ValidationError';
+import logger from '../../utils/logger';
 
 /**
  * This function is a middleware that validates the user information in the request body in order to log the user in.
@@ -45,6 +46,11 @@ export default function userSignupValidator(
   }
 
   if (errors.length) {
+    logger.warn(
+      `Signup validation failed - IP: ${req.ip}, Email: ${
+        user?.email || 'N/A'
+      }, Errors: ${errors.join('; ')}`
+    );
     next(new ValidationError('Validation Error', errors));
     return;
   }

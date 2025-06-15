@@ -5,6 +5,7 @@ import { comparePassword } from '../../utils/auth/comparePassword';
 import { generateAccessToken } from '../../utils/auth/generateAccessToken';
 import { generateRefreshToken } from '../../utils/auth/generateRefreshToken';
 import { storeRefreshToken } from '../../utils/auth/storeRefreshToken';
+import logger from '../../utils/logger';
 
 /**
  * Login controller that authenticates the user with the provided email and password.
@@ -25,9 +26,12 @@ export default async function login(
   try {
     const { email, password } = req.body.user;
 
+    logger.info(`Login attempt for email: ${email}`);
+
     const existingUser = await prisma.user.findUnique({ where: { email } });
 
     if (!existingUser) {
+      logger.warn(`Login failed: User not found for email: ${email}`);
       throw new BadRequestError('Invalid credentials');
     }
 
@@ -37,6 +41,7 @@ export default async function login(
     );
 
     if (!isValidPassword) {
+      logger.warn(`Login failed: Invalid password for email: ${email}`);
       throw new BadRequestError('Invalid credentials');
     }
 
@@ -52,6 +57,9 @@ export default async function login(
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
+    logger.info(
+      `User logged in successfully: ${existingUser.email} (ID: ${existingUser.id})`
+    );
     /// Remember to setup a viewer
     res.status(200).json({
       user: {
@@ -65,6 +73,8 @@ export default async function login(
       accessToken,
     });
   } catch (error) {
+    const email = req.body?.user?.email;
+    logger.error(`Login error for email ${email}: ${error}`);
     next(error);
   }
 }

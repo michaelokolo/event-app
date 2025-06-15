@@ -3,6 +3,7 @@ import { Role } from '../../../generated/prisma';
 import { hashPassword } from '../auth/hashPassword';
 import { ConflictError } from '../errors/ConflictError';
 import { InternalServerError } from '../../utils/errors/InternalServerError';
+import logger from '../logger';
 
 /**
  * Creates a new user in the database using Prisma.
@@ -67,7 +68,12 @@ export default async function createUserPrisma({
 
     return user;
   } catch (error) {
-    console.error('Database error while creating user:', error);
+    logger.error('Failed to create user in database', {
+      error,
+      email,
+      firstName,
+      lastName,
+    });
     throw new InternalServerError('Failed to create user', error);
   }
 }

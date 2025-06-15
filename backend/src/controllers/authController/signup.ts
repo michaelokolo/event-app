@@ -4,6 +4,7 @@ import { generateAccessToken } from '../../utils/auth/generateAccessToken';
 import { generateRefreshToken } from '../../utils/auth/generateRefreshToken';
 import { storeRefreshToken } from '../../utils/auth/storeRefreshToken';
 import { InternalServerError } from '../../utils/errors/InternalServerError';
+import logger from '../../utils/logger';
 
 /**
  * Signup controller that registers the user with information given in the body of the request.
@@ -20,16 +21,23 @@ export default async function signup(
 ) {
   try {
     const userData = req.body.user;
+
+    logger.info(`Signup attempt for email: ${userData.email}`);
+
     const newUser = await createUserPrisma(userData);
 
     if (!newUser) {
+      logger.error('User creation failed unexpectedly');
       throw new InternalServerError('User creation failed');
     }
+
+    logger.info(`New user created with ID: ${newUser.id}`);
 
     const accessToken = generateAccessToken(newUser.id, newUser.role);
     const refreshToken = generateRefreshToken(newUser.id);
 
     await storeRefreshToken(newUser.id, refreshToken);
+    logger.debug(`Refresh token stored for user ID: ${newUser.id}`);
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -38,12 +46,15 @@ export default async function signup(
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
+    logger.info(`User ${newUser.id} signed up and tokens issued`);
+
     // Remember to setup a viewer
     res.status(201).json({
       user: newUser,
       accessToken,
     });
   } catch (error) {
+    logger.error(`Signup error: ${error}`);
     next(error);
   }
 }

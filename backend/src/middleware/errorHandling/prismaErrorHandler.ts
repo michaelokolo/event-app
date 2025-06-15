@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import logger from '../../utils/logger';
 
 /**
  * Prisma error handler middleware for Express applications.
@@ -23,8 +24,12 @@ export default async function prismaErrorHandler(
   next: NextFunction
 ) {
   if (err instanceof PrismaClientKnownRequestError) {
+    const requestInfo = `(${req.method}) ${req.originalUrl} - IP: ${req.ip}`;
+
     switch (err.code) {
-      case 'P2002': // Unique constraint failed
+      case 'P2002': {
+        const message = `Unique constraint failed on ${err.meta?.target}`;
+        logger.warn(`[Prisma P2002] ${message} - ${requestInfo}`);
         res.status(409).json({
           error: {
             message: err.message,
@@ -34,7 +39,11 @@ export default async function prismaErrorHandler(
           },
         });
         return;
-      case 'P2025': // Record to update not found
+      }
+
+      case 'P2025': {
+        const message = `Record not found during update/delete on ${err.meta?.target}`;
+        logger.warn(`[Prisma P2025] ${message} - ${requestInfo}`);
         res.status(404).json({
           error: {
             message: err.message,
@@ -44,7 +53,11 @@ export default async function prismaErrorHandler(
           },
         });
         return;
-      case 'P2003': // Foreign key constraint failed
+      }
+
+      case 'P2003': {
+        const message = `Foreign key constraint failed on ${err.meta?.target}`;
+        logger.warn(`[Prisma P2003] ${message} - ${requestInfo}`);
         res.status(400).json({
           error: {
             message: err.message,
@@ -54,7 +67,10 @@ export default async function prismaErrorHandler(
           },
         });
         return;
-      default:
+      }
+
+      default: {
+        logger.warn(`[Prisma Unknown] ${err.message} - ${requestInfo}`);
         res.status(500).json({
           error: {
             message: 'Prisma error',
@@ -62,6 +78,7 @@ export default async function prismaErrorHandler(
           },
         });
         return;
+      }
     }
   }
 

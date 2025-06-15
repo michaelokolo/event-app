@@ -1,4 +1,6 @@
 import express from 'express';
+import morgan from 'morgan';
+import logger, { winstonStream } from './utils/logger';
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/api/auth';
 import userRouter from './routes/api/user';
@@ -9,6 +11,13 @@ import {
 } from './middleware/errorHandling';
 
 const app = express();
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(morgan('combined', { stream: winstonStream }));
+} else {
+  app.use(morgan('dev'));
+}
+
 app.use(cookieParser());
 app.use(express.json());
 

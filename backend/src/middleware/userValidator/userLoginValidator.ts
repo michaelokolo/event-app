@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { validateEmail } from '../../utils/validateEmail';
 import { validatePassword } from '../../utils/validatePassword';
 import { ValidationError } from '../../utils/errors/ValidationError';
+import logger from '../../utils/logger';
 
 /**
  * Middleware to validate user login request.
@@ -31,6 +32,11 @@ export default function userLoginValidator(
   }
 
   if (errors.length) {
+    logger.warn(
+      `Validation failed during login - IP: ${req.ip}, Errors: ${errors.join(
+        '; '
+      )}`
+    );
     next(new ValidationError('Validation Error', errors));
     return;
   }

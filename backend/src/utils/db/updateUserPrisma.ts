@@ -3,6 +3,7 @@ import { Role } from '../../../generated/prisma';
 import { hashPassword } from '../auth/hashPassword';
 import { ConflictError } from '../errors/ConflictError';
 import { InternalServerError } from '../../utils/errors/InternalServerError';
+import logger from '../logger';
 
 export interface UpdateUserParams {
   firstName?: string;
@@ -68,7 +69,14 @@ export async function updateUserPrisma(
     });
     return updatedUser;
   } catch (error) {
-    console.error('Error updating user:', error);
+    logger.error('Failed to update user', {
+      error,
+      userId,
+      updateData: {
+        ...updateData,
+        password: updateData.password ? '[PROTECTED]' : undefined,
+      },
+    });
     throw new InternalServerError('Failed to update user', error);
   }
 }
