@@ -5,6 +5,7 @@ import { generateRefreshToken } from '../../utils/auth/generateRefreshToken';
 import { storeRefreshToken } from '../../utils/auth/storeRefreshToken';
 import { InternalServerError } from '../../utils/errors/InternalServerError';
 import logger from '../../utils/logger';
+import userViewer from '../../view/userViewer';
 
 /**
  * Signup controller that registers the user with information given in the body of the request.
@@ -47,12 +48,8 @@ export default async function signup(
     });
 
     logger.info(`User ${newUser.id} signed up and tokens issued`);
-
-    // Remember to setup a viewer
-    res.status(201).json({
-      user: newUser,
-      accessToken,
-    });
+    const userView = userViewer(newUser, accessToken);
+    res.status(201).json(userView);
   } catch (error) {
     logger.error(`Signup error: ${error}`);
     next(error);

@@ -13,7 +13,6 @@ import logger from '../logger';
  * @param {string} params.email - The email of the user.
  * @param {string} params.password - The password of the user.
  * @param {Role} params.role - The role of the user.
- * @returns {Promise<{ id: string; firstName: string; lastName: string; email: string; role: Role }>} - The created user object.
  */
 
 export interface CreateUserParams {
@@ -30,13 +29,7 @@ export default async function createUserPrisma({
   email,
   password,
   role,
-}: CreateUserParams): Promise<{
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: Role;
-}> {
+}: CreateUserParams) {
   const existingUser = await prisma.user.findUnique({
     where: { email },
     select: { id: true },
@@ -56,13 +49,6 @@ export default async function createUserPrisma({
         email,
         password: hashedPassword,
         role,
-      },
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        role: true,
       },
     });
 

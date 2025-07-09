@@ -6,6 +6,7 @@ import { generateAccessToken } from '../../utils/auth/generateAccessToken';
 import { generateRefreshToken } from '../../utils/auth/generateRefreshToken';
 import { storeRefreshToken } from '../../utils/auth/storeRefreshToken';
 import logger from '../../utils/logger';
+import userViewer from '../../view/userViewer';
 
 /**
  * Login controller that authenticates the user with the provided email and password.
@@ -60,18 +61,12 @@ export default async function login(
     logger.info(
       `User logged in successfully: ${existingUser.email} (ID: ${existingUser.id})`
     );
-    /// Remember to setup a viewer
-    res.status(200).json({
-      user: {
-        id: existingUser.id,
-        firstName: existingUser.firstName,
-        lastName: existingUser.lastName,
-        email: existingUser.email,
-        role: existingUser.role,
-        // Add other user fields as necessary
-      },
-      accessToken,
-    });
+
+    // Create a user view
+
+    const userView = userViewer(existingUser, accessToken);
+
+    res.status(200).json(userView);
   } catch (error) {
     const email = req.body?.user?.email;
     logger.error(`Login error for email ${email}: ${error}`);

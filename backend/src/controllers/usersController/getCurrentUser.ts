@@ -3,6 +3,7 @@ import { AuthenticatedRequest } from '../../middleware/auth/authenticate';
 import prisma from '../../utils/db/prisma';
 import { UnauthorizedError } from '../../utils/errors/UnauthorizedError';
 import { NotFoundError } from '../../utils/errors/NotFoundError';
+import userViewer from '../../view/userViewer';
 
 export default async function getCurrentUser(
   req: AuthenticatedRequest,
@@ -15,20 +16,13 @@ export default async function getCurrentUser(
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.user?.id },
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        role: true,
-      },
     });
 
     if (!user) {
       throw new NotFoundError('User not found');
     }
-
-    res.status(200).json(user);
+    const userView = userViewer(user);
+    res.status(200).json(userView);
   } catch (error) {
     next(error);
   }
