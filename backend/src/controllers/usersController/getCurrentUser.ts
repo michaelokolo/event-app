@@ -4,7 +4,7 @@ import prisma from '../../utils/db/prisma';
 import { UnauthorizedError } from '../../utils/errors/UnauthorizedError';
 import { NotFoundError } from '../../utils/errors/NotFoundError';
 
-export async function getCurrentUser(
+export default async function getCurrentUser(
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
