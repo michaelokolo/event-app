@@ -27,12 +27,12 @@ export default async function login(
   try {
     const { email, password } = req.body.user;
 
-    logger.info(`Login attempt for email: ${email}`);
+    logger.info(`[Auth] Login attempt for email: ${email}`);
 
     const existingUser = await prisma.user.findUnique({ where: { email } });
 
     if (!existingUser) {
-      logger.warn(`Login failed: User not found for email: ${email}`);
+      logger.warn(`[Auth] Login failed: User not found for email: ${email}`);
       throw new BadRequestError('Invalid credentials');
     }
 
@@ -42,7 +42,7 @@ export default async function login(
     );
 
     if (!isValidPassword) {
-      logger.warn(`Login failed: Invalid password for email: ${email}`);
+      logger.warn(`[Auth] Login failed: Invalid password for email: ${email}`);
       throw new BadRequestError('Invalid credentials');
     }
 
@@ -59,7 +59,7 @@ export default async function login(
     });
 
     logger.info(
-      `User logged in successfully: ${existingUser.email} (ID: ${existingUser.id})`
+      `[Auth] User logged in successfully: ${existingUser.email} (ID: ${existingUser.id})`
     );
 
     // Create a user view
@@ -69,7 +69,7 @@ export default async function login(
     res.status(200).json(userView);
   } catch (error) {
     const email = req.body?.user?.email;
-    logger.error(`Login error for email ${email}: ${error}`);
+    logger.error(`[Auth] Login error for email ${email}: ${error}`);
     next(error);
   }
 }
