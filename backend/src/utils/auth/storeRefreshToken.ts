@@ -1,4 +1,4 @@
-import { updateUserPrisma } from '../db/updateUserPrisma';
+import { updateUserPrisma } from '../db/user/updateUserPrisma';
 import { InternalServerError } from '../../utils/errors/InternalServerError';
 import logger from '../logger';
 import prisma from '../db/prisma';

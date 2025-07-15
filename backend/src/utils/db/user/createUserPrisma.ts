@@ -1,9 +1,9 @@
-import prisma from './prisma';
-import { Role } from '../../../generated/prisma';
-import { hashPassword } from '../auth/hashPassword';
-import { ConflictError } from '../errors/ConflictError';
-import { InternalServerError } from '../../utils/errors/InternalServerError';
-import logger from '../logger';
+import prisma from '../prisma';
+import { Role } from '../../../../generated/prisma';
+import { hashPassword } from '../../auth/hashPassword';
+import { ConflictError } from '../../errors/ConflictError';
+import { InternalServerError } from '../../errors/InternalServerError';
+import logger from '../../logger';
 
 /**
  * Creates a new user in the database using Prisma.

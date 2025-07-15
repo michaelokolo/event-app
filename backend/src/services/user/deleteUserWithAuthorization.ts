@@ -1,6 +1,6 @@
 import { Role } from '../../../generated/prisma';
 import { ForbiddenError } from '../../utils/errors/ForbiddenError';
-import { deleteUserPrisma } from '../../utils/db/deleteUserPrisma';
+import { deleteUserPrisma } from '../../utils/db/user/deleteUserPrisma';
 import logger from '../../utils/logger';
 
 export async function deleteUserWithAuthorization(

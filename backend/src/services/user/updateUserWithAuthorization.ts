@@ -1,7 +1,7 @@
 import {
   updateUserPrisma,
   UpdateUserParams,
-} from '../../utils/db/updateUserPrisma';
+} from '../../utils/db/user/updateUserPrisma';
 import { Role } from '../../../generated/prisma';
 import { ForbiddenError } from '../../utils/errors/ForbiddenError';
 import logger from '../../utils/logger';

@@ -34,6 +34,7 @@ model Event {
   id           String        @id @default(uuid())
   title        String
   date         DateTime
+  description  String
   location     String
   services     String[]
   budget       Float

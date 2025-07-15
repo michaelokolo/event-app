@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import createUserPrisma from '../../utils/db/createUserPrisma';
+import createUserPrisma from '../../utils/db/user/createUserPrisma';
 import { generateAccessToken } from '../../utils/auth/generateAccessToken';
 import { generateRefreshToken } from '../../utils/auth/generateRefreshToken';
 import { storeRefreshToken } from '../../utils/auth/storeRefreshToken';

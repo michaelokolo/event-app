@@ -1,6 +1,6 @@
-import prisma from './prisma';
-import logger from '../logger';
-import { InternalServerError } from '../errors/InternalServerError';
+import prisma from '../prisma';
+import logger from '../../logger';
+import { InternalServerError } from '../../errors/InternalServerError';
 
 export async function deleteUserPrisma(userId: string) {
   try {
