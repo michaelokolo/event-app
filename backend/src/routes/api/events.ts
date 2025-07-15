@@ -13,26 +13,11 @@ import {
 
 const router = Router();
 
-router.post(
-  '/',
-  authenticate,
-  authorize(Role.ORGANIZER, Role.ADMIN),
-  createEvent
-);
+router.post('/', authenticate, authorize(Role.ORGANIZER), createEvent);
 router.get('/', listEvents);
 router.get('/:id', getEventById);
-router.patch(
-  '/:id',
-  authenticate,
-  authorize(Role.ORGANIZER, Role.ADMIN),
-  updateEvent
-);
-router.delete(
-  '/:id',
-  authenticate,
-  authorize(Role.ORGANIZER, Role.ADMIN),
-  deleteEvent
-);
+router.patch('/:id', authenticate, authorize(Role.ORGANIZER), updateEvent);
+router.delete('/:id', authenticate, authorize(Role.ORGANIZER), deleteEvent);
 router.get(
   '/me/events',
   authenticate,
