@@ -5,6 +5,7 @@ import {
   deleteCurrentUser,
   getUserById,
 } from '../../controllers/usersController';
+import { listOrganizerEvents } from '../../controllers/eventsController';
 import { authenticate } from '../../middleware/auth/authenticate';
 import { authorize } from '../../middleware/auth/authorize';
 import { Role } from '../../../generated/prisma';
@@ -16,5 +17,12 @@ router.patch('/me', authenticate, updateCurrentUser);
 router.delete('/me', authenticate, deleteCurrentUser);
 
 router.get('/:id', authenticate, authorize(Role.ADMIN), getUserById);
+
+router.get(
+  '/me/events',
+  authenticate,
+  authorize(Role.ORGANIZER),
+  listOrganizerEvents
+);
 
 export default router;
