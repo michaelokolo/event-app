@@ -41,6 +41,8 @@ model Event {
   organizer    User          @relation("OrganizerEvents", fields: [organizerId], references: [id])
   organizerId  String
   applications Application[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now())
 }
 
 model Application {
@@ -53,7 +55,7 @@ model Application {
   message      String
   rateQuote    Float
   createdAt    DateTime          @default(now())
-  updatedAt    DateTime          @updatedAt
+  updatedAt    DateTime          @default(now())
 }
 
 enum Role {

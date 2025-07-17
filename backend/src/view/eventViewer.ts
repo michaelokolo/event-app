@@ -6,6 +6,8 @@ export interface EventView {
   location: string;
   services: string[];
   budget: number;
+  createdAt: Date;
+  updatedAt: Date;
   organizer: {
     id: string;
     firstName: string;
@@ -24,6 +26,8 @@ export default function eventViewer(EventView: EventView) {
     location: EventView.location,
     services: EventView.services,
     budget: EventView.budget,
+    createdAt: EventView.createdAt.toISOString(),
+    updatedAt: EventView.updatedAt.toISOString(),
     organizer: {
       id: EventView.organizer.id,
       firstName: EventView.organizer.firstName,
