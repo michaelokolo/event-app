@@ -1,7 +1,7 @@
 import prisma from '../prisma';
 
-export default async function deleteEventPrisma(eventId: string) {
-  const deletedEvent = await prisma.event.delete({
+export default async function getEventByIdPrisma(eventId: string) {
+  const event = await prisma.event.findUnique({
     where: { id: eventId },
     include: {
       organizer: {
@@ -15,5 +15,5 @@ export default async function deleteEventPrisma(eventId: string) {
       },
     },
   });
-  return deletedEvent;
+  return event;
 }
