@@ -5,7 +5,7 @@ import {
   deleteCurrentUser,
   getUserById,
 } from '../../controllers/usersController';
-import { listOrganizerEvents } from '../../controllers/eventsController';
+import { listOrganizerEvents } from '../../controllers/usersController';
 import { authenticate } from '../../middleware/auth/authenticate';
 import { authorize } from '../../middleware/auth/authorize';
 import { Role } from '../../../generated/prisma';
