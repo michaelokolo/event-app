@@ -8,6 +8,7 @@ import {
   getEventById,
   listEvents,
   updateEvent,
+  applyToEvent,
 } from '../../controllers/eventsController';
 
 const router = Router();
@@ -17,5 +18,12 @@ router.get('/', listEvents);
 router.get('/:id', getEventById);
 router.patch('/:id', authenticate, authorize(Role.ORGANIZER), updateEvent);
 router.delete('/:id', authenticate, authorize(Role.ORGANIZER), deleteEvent);
+
+router.post(
+  '/:id/applications',
+  authenticate,
+  authorize(Role.FREELANCER),
+  applyToEvent
+);
 
 export default router;
