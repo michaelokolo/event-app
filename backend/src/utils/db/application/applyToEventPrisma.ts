@@ -16,11 +16,20 @@ export default async function applyToEventPrisma(
       freelancerId: applicationData.freelancerId,
       message: applicationData.message,
       rateQuote: applicationData.rateQuote,
-      status: ApplicationStatus.PENDING,
+      status: ApplicationStatus.SUBMITTED,
+      history: {
+        create: {
+          previousStatus: null,
+          newStatus: ApplicationStatus.SUBMITTED,
+          changedById: applicationData.freelancerId,
+          comment: 'Application submitted.',
+        },
+      },
     },
     include: {
       event: true,
       freelancer: true,
+      history: true,
     },
   });
   return application;

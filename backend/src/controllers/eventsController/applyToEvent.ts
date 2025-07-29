@@ -50,6 +50,7 @@ export default async function applyToEvent(
       where: {
         eventId: event.id,
         freelancerId: freelancerId,
+        deleted: false,
       },
     });
 

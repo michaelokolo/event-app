@@ -15,19 +15,21 @@ datasource db {
 }
 
 model User {
-  id           String        @id @default(uuid())
-  email        String        @unique
-  password     String
-  firstName    String
-  lastName     String
-  role         Role
-  refreshToken String?
-  company      String? // Optional field for Organizers
-  skills       String[] // Freelancers only
-  bio          String? // Optional field for Freelancers
-  portfolio    String? // Optional field for Freelancers
-  events       Event[]       @relation("OrganizerEvents")
-  applications Application[]
+  id                   String               @id @default(uuid())
+  email                String               @unique
+  password             String
+  firstName            String
+  lastName             String
+  role                 Role
+  refreshToken         String?
+  company              String?
+  skills               String[]
+  bio                  String?
+  portfolio            String?
+  events               Event[]              @relation("OrganizerEvents")
+  applications         Application[]        @relation("FreelancerApplications")
+  lockedApplications   Application[]        @relation("LockedByApplications")
+  applicationHistories ApplicationHistory[] @relation("UserApplicationHistory")
 }
 
 model Event {
@@ -46,16 +48,37 @@ model Event {
 }
 
 model Application {
-  id           String            @id @default(uuid())
-  event        Event             @relation(fields: [eventId], references: [id])
-  eventId      String
-  freelancer   User              @relation(fields: [freelancerId], references: [id])
-  freelancerId String
-  status       ApplicationStatus
-  message      String
-  rateQuote    Float
-  createdAt    DateTime          @default(now())
-  updatedAt    DateTime          @default(now())
+  id               String               @id @default(uuid())
+  event            Event                @relation(fields: [eventId], references: [id])
+  eventId          String
+  freelancer       User                 @relation("FreelancerApplications", fields: [freelancerId], references: [id])
+  freelancerId     String
+  status           ApplicationStatus
+  message          String
+  rateQuote        Float
+  rejectedMessage  String?
+  cancelledMessage String?
+  withdrawnMessage String?
+  deleted          Boolean              @default(false)
+  lockedAt         DateTime?
+  lockedBy         User?                @relation("LockedByApplications", fields: [lockedById], references: [id])
+  lockedById       String?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @default(now())
+  history          ApplicationHistory[]
+}
+
+model ApplicationHistory {
+  id             String             @id @default(uuid())
+  application    Application        @relation(fields: [applicationId], references: [id])
+  applicationId  String
+  previousStatus ApplicationStatus?
+  newStatus      ApplicationStatus
+  changedBy      User               @relation("UserApplicationHistory", fields: [changedById], references: [id])
+  changedById    String
+  timestamp      DateTime           @default(now())
+  reason         String?
+  comment        String?
 }
 
 enum Role {
@@ -65,7 +88,10 @@ enum Role {
 }
 
 enum ApplicationStatus {
-  PENDING
+  SUBMITTED
+  UNDER_REVIEW
   ACCEPTED
   REJECTED
+  CANCELLED
+  WITHDRAWN
 }
