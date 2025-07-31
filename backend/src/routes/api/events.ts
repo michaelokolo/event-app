@@ -20,7 +20,7 @@ router.patch('/:id', authenticate, authorize(Role.ORGANIZER), updateEvent);
 router.delete('/:id', authenticate, authorize(Role.ORGANIZER), deleteEvent);
 
 router.post(
-  '/:id/apply',
+  '/:id/applications',
   authenticate,
   authorize(Role.FREELANCER),
   applyToEvent
