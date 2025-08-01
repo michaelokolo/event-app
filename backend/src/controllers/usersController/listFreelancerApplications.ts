@@ -54,7 +54,7 @@ export default async function listFreelancerApplications(
     logger.info(`[User] Listed ${applicationViews.length} applications`);
     res.status(200).json(applicationViews);
   } catch (error) {
-    logger.error('Error listing freelancer applications:', error);
+    logger.error('[User] Error listing freelancer applications:', error);
     next(error);
   }
 }

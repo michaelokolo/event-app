@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { application } from 'express';
 import morgan from 'morgan';
 import logger, { winstonStream } from './utils/logger';
 import cookieParser from 'cookie-parser';
@@ -6,6 +6,7 @@ import authRouter from './routes/api/auth';
 import usersRouter from './routes/api/users';
 import adminRouter from './routes/api/admin';
 import eventsRouter from './routes/api/events';
+import applicationRouter from './routes/api/applications';
 import {
   generalErrorHandler,
   prismaErrorHandler,
@@ -26,6 +27,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/events', eventsRouter);
+app.use('/api/applications', applicationRouter);
 
 app.use(prismaErrorHandler);
 app.use(generalErrorHandler);
