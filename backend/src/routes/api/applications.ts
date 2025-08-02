@@ -4,6 +4,7 @@ import { Role } from '../../../generated/prisma';
 import {
   withdrawApplication,
   deleteApplication,
+  reviewApplication,
 } from '../../controllers/applicationController';
 
 import { Router } from 'express';
@@ -22,6 +23,13 @@ router.delete(
   authenticate,
   authorize(Role.FREELANCER),
   deleteApplication
+);
+
+router.patch(
+  '/:id/review',
+  authenticate,
+  authorize(Role.ORGANIZER),
+  reviewApplication
 );
 
 export default router;

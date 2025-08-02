@@ -55,6 +55,15 @@ export default async function listEventApplications(
       throw new UnauthorizedError('User not authenticated');
     }
 
+    if (event.organizerId !== organizerId) {
+      logger.error(
+        `[Event] Organizer ID ${organizerId} does not match event organizer ID ${event.organizerId}`
+      );
+      throw new UnauthorizedError(
+        'You are not authorized to view applications for this event'
+      );
+    }
+
     const { status, quoteMin, quoteMax, fromDate, toDate, limit, offset } =
       parseApplicationListQuery(req.query);
 
