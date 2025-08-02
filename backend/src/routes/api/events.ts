@@ -9,6 +9,7 @@ import {
   listEvents,
   updateEvent,
   applyToEvent,
+  listEventApplications,
 } from '../../controllers/eventsController';
 
 const router = Router();
@@ -24,6 +25,13 @@ router.post(
   authenticate,
   authorize(Role.FREELANCER),
   applyToEvent
+);
+
+router.get(
+  '/:id/applications',
+  authenticate,
+  authorize(Role.ORGANIZER),
+  listEventApplications
 );
 
 export default router;

@@ -1,6 +1,6 @@
 import prisma from '../src/utils/db/prisma';
 import { Role } from '../generated/prisma';
-import createUserPrisma from '../src/utils/db/createUserPrisma';
+import createUserPrisma from '../src/utils/db/user/createUserPrisma';
 
 async function seedFirstAdmin() {
   const adminEmail = process.env.FIRST_ADMIN_EMAIL!;
