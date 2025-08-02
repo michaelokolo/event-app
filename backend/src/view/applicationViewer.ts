@@ -20,6 +20,7 @@ export function applicationViewer(application: ApplicationWithRelations) {
     status: application.status,
     createdAt: application.createdAt.toISOString(),
     updatedAt: application.updatedAt.toISOString(),
+    deleted: application.deleted,
     event: {
       id: application.event.id,
       title: application.event.title,
@@ -38,6 +39,7 @@ export function applicationViewer(application: ApplicationWithRelations) {
       changedById: h.changedById,
       comment: h.comment,
       timestamp: h.timestamp.toISOString(),
+      reason: h.reason,
     })),
   };
 

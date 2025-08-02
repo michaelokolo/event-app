@@ -87,7 +87,7 @@ export default async function withdrawApplication(
     );
     res.status(200).json(applicationView);
   } catch (error) {
-    logger.error('Error withdrawing application:', error);
+    logger.error('[Applications] Error withdrawing application:', error);
     next(error);
   }
 }
